@@ -10,7 +10,7 @@ jobs:
   deploy:
     uses: ./.github/workflows/deploy-hostnative.yml
     with:
-      SERVER_IP:    "51.44.25.26"
+      SERVER_IP:    "13.39.233.30"
       ENVIRONMENT:  "production"
       BRANCH:       "main"
       SSH_USER:    "ubuntu"
