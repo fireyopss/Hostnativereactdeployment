@@ -1,0 +1,64 @@
+---
+- name: Setup react app server
+  hosts: reactserver
+  become: true 
+  vars:
+    hostname: "oyoutube.duckdns.org"
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+    
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+    
+    - name: Build react app on the local machine
+      become: false
+      command: npm run build
+      delegate_to: localhost
+    
+    - name: Timestamp dd-mm-yyyy_hh:mm:ss
+      command: date "+%d-%m-%Y_%H:%M:%S"
+      register: timestamp
+    
+    - name: Create Deployment Directory
+      command: mkdir -p /var/www/{{ timestamp.stdout }}/html
+      args:
+        creates: /var/www/{{ timestamp.stdout }}/html
+    
+    - name: Upload build files to the server
+      copy:
+        src: ../../dist/
+        dest: /var/www/{{ timestamp.stdout }}/html
+    
+    - name: Symlink deployment directory to /var/www/{{ hostname }}
+      file:
+        src: /var/www/{{ timestamp.stdout }}/html
+        dest: /var/www/{{ hostname }}
+        state: link
+        force: yes
+
+    - name: Create Nginx configuration file
+      template:
+        src: templates/vhost.j2
+        dest: /etc/nginx/sites-available/{{ hostname }}
+    
+    - name: Enable Nginx site
+      file:
+        src: /etc/nginx/sites-available/{{ hostname }}
+        dest: /etc/nginx/sites-enabled/{{ hostname }}
+        state: link
+        force: yes
+    
+    - name: Remove default Nginx site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+        force: yes
+    
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted

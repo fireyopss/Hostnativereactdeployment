@@ -1,1 +1,5 @@
 node_modules/
+0videofiles/
+.infra/main.tf
+.infra/.terraform.lock.hcl
+.infra/.terraform/providers/
