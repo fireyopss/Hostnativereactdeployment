@@ -2,8 +2,6 @@
 - name: Rollback to the previous version
   hosts: reactserver
   become: true
-  vars:
-    hostname: "oyoutube.duckdns.org"
   tasks:
     - name: Read the previous symlink
       command: readlink /var/www/previous_{{ hostname }}

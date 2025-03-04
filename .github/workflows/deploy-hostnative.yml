@@ -45,3 +45,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+      
+      - name: install ansible
+        run: |
+          sudo apt install software-properties-common
+          sudo add-apt-repository --yes --update ppa:ansible/ansible
+          sudo apt install ansible
+
+      - name: Run ansible deploy playbook
+        run: ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook .infra/playbooks/deploy.yml -i ${{ github.event.inputs.SERVER_IP }}, -e "hostname=${{ github.event.inputs.HOSTNAME }}"
+
