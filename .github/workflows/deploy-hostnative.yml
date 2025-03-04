@@ -49,6 +49,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       
+      - name: Setup Node 18
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+      
+      - name: Install dependancies
+        run: npm install
+      
       - name: install ansible
         run: |
           sudo apt install software-properties-common
