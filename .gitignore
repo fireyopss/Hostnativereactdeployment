@@ -2,3 +2,4 @@ node_modules/
 0videofiles/
 .infra/.terraform.lock.hcl
 .infra/.terraform/providers/
+.infra/awskey.tfvars
