@@ -24,21 +24,35 @@
       register: timestamp
     
     - name: Create Deployment Directory
-      command: mkdir -p /var/www/{{ timestamp.stdout }}/html
+      command: mkdir -p /var/www/deployments/{{ timestamp.stdout }}/html
       args:
         creates: /var/www/{{ timestamp.stdout }}/html
     
     - name: Upload build files to the server
       copy:
         src: ../../dist/
-        dest: /var/www/{{ timestamp.stdout }}/html
+        dest: /var/www/deployments/{{ timestamp.stdout }}/html
+    
+
+    - name: Read the current symlink
+      command: readlink /var/www/{{ hostname }}
+      register: current_symlink
+      ignore_errors: true
     
     - name: Symlink deployment directory to /var/www/{{ hostname }}
       file:
-        src: /var/www/{{ timestamp.stdout }}/html
+        src: /var/www/deployments/{{ timestamp.stdout }}/html
         dest: /var/www/{{ hostname }}
         state: link
         force: yes
+    
+    - name: Register Old symlink as previous hostname 
+      file:
+        src: "{{ current_symlink.stdout }}"
+        dest: /var/www/previous_{{ hostname }}
+        state: link
+        force: yes
+      when: current_symlink.stdout is defined
 
     - name: Create Nginx configuration file
       template:
