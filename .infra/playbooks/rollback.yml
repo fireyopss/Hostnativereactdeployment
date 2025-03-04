@@ -1,6 +1,6 @@
 ---
 - name: Rollback to the previous version
-  hosts: reactserver
+  hosts: all
   become: true
   tasks:
     - name: Read the previous symlink

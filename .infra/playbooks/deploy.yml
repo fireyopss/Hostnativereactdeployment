@@ -1,6 +1,6 @@
 ---
 - name: Setup react app server
-  hosts: reactserver
+  hosts: all
   become: true 
   tasks:
     - name: Update apt cache
