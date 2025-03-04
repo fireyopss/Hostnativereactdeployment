@@ -1,0 +1,39 @@
+---
+- name: Rollback to the previous version
+  hosts: reactserver
+  become: true
+  vars:
+    hostname: "oyoutube.duckdns.org"
+  tasks:
+    - name: Read the previous symlink
+      command: readlink /var/www/previous_{{ hostname }}
+      register: previous_symlink
+      ignore_errors: true
+    
+    - name: Read Current Symlink
+      command: readlink /var/www/{{ hostname }}
+      register: current_symlink
+      ignore_errors: true
+    
+
+    - name: debug prev
+      debug:
+        msg: "{{ previous_symlink.stdout }}"
+    
+    - name: debug current
+      debug:
+        msg: "{{ current_symlink.stdout }}"
+    
+    - name: Symlink deployment directory to /var/www/{{ hostname }}
+      file:
+        src: "{{ previous_symlink.stdout }}"
+        dest: /var/www/{{ hostname }}
+        state: link
+        force: yes
+    
+    - name: Set the previous symlink as the current symlink
+      file:
+        src: "{{ current_symlink.stdout }}"
+        dest: /var/www/previous_{{ hostname }}
+        state: link
+        force: yes

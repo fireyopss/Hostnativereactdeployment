@@ -52,7 +52,7 @@
         dest: /var/www/previous_{{ hostname }}
         state: link
         force: yes
-      when: current_symlink.stdout is defined
+      when: current_symlink.stdout is defined and current_symlink.stdout != ""
 
     - name: Create Nginx configuration file
       template:
