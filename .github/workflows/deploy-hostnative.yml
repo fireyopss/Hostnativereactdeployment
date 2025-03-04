@@ -56,5 +56,5 @@ jobs:
           sudo apt install ansible
 
       - name: Run ansible deploy playbook
-        run: ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook .infra/playbooks/deploy.yml -i ${{ inputs.SERVER_IP }}, -e "hostname=${{ inputs.HOSTNAME }}"  --private-key ~/.ssh/id_rsa -u "{{inputs.SSH_USER}}"
+        run: ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook .infra/playbooks/deploy.yml -i ${{ inputs.SERVER_IP }}, -e "hostname=${{ inputs.HOSTNAME }}"  --private-key ~/.ssh/id_rsa -u "${{inputs.SSH_USER}}"
 
