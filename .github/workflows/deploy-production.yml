@@ -13,6 +13,7 @@ jobs:
       SERVER_IP:    "51.44.25.26"
       ENVIRONMENT:  "production"
       BRANCH:       "main"
+      SSH_USER:    "ubuntu"
       HOSTNAME: "oyoutube.duckdns.org"
     secrets:
       AWS_ACCESS_KEY:   "${{ secrets.AWS_ACCESS_KEY }}"

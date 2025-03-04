@@ -15,6 +15,9 @@ on:
       HOSTNAME:
         required: true
         type: string
+      SSH_USER:
+        required: true
+        type: string
     secrets:
       AWS_ACCESS_KEY:
         required: true
@@ -53,5 +56,5 @@ jobs:
           sudo apt install ansible
 
       - name: Run ansible deploy playbook
-        run: ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook .infra/playbooks/deploy.yml -i ${{ inputs.SERVER_IP }}, -e "hostname=${{ inputs.HOSTNAME }}"  --private-key ~/.ssh/id_rsa -u "ubuntu"
+        run: ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook .infra/playbooks/deploy.yml -i ${{ inputs.SERVER_IP }}, -e "hostname=${{ inputs.HOSTNAME }}"  --private-key ~/.ssh/id_rsa -u "{{inputs.SSH_USER}}"
 
